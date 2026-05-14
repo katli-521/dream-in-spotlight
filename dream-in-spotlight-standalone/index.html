@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dream in Spotlight — Katerina Li</title>
+  <meta name="description" content="Dream in Spotlight — the official theme song of BNU 4th Art Festival. Composed, produced and performed by Katerina Li."/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #0d0821;
+      color: #fff;
+      font-family: "Times New Roman", Times, serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Fade-in on scroll ── */
+    [data-fade] {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    [data-fade].vis { opacity: 1; transform: translateY(0); }
+    [data-fade][data-d="1"] { transition-delay: 0.12s; }
+    [data-fade][data-d="2"] { transition-delay: 0.24s; }
+    [data-fade][data-d="3"] { transition-delay: 0.36s; }
+    [data-fade][data-d="4"] { transition-delay: 0.48s; }
+    [data-fade][data-d="slide"] {
+      transition: opacity 1.1s ease, transform 1.1s cubic-bezier(.16,1,.3,1);
+      transform: translateX(-40px);
+    }
+    [data-fade][data-d="slide"].vis { transform: translateX(0); }
+    [data-fade][data-d="slide-r"] {
+      transition: opacity 1.1s ease, transform 1.1s cubic-bezier(.16,1,.3,1);
+      transform: translateX(40px);
+    }
+    [data-fade][data-d="slide-r"].vis { transform: translateX(0); }
+
+    /* ── Back button ── */
+    .back-btn {
+      position: fixed;
+      top: 26px;
+      left: 26px;
+      font-size: 12px;
+      color: #F8C2E7;
+      text-decoration: none;
+      z-index: 200;
+      letter-spacing: 0.12em;
+      opacity: 0.72;
+      transition: opacity 0.22s;
+      font-style: italic;
+    }
+    .back-btn:hover { opacity: 1; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.55;
+      transform: scale(1.04);
+    }
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 60% 40%, rgba(13,8,33,0.1) 0%, rgba(13,8,33,0.55) 70%),
+        linear-gradient(to bottom, rgba(13,8,33,0.5) 0%, rgba(13,8,33,0) 40%, rgba(13,8,33,0.98) 100%);
+    }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      padding: 0 32px;
+      max-width: 860px;
+    }
+    .hero-eyebrow {
+      font-size: 10.5px;
+      letter-spacing: 0.4em;
+      color: #F8C2E7;
+      margin-bottom: 22px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+    .hero-title {
+      font-size: clamp(56px, 10vw, 128px);
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: #F8C2E7;
+    }
+    .hero-sub {
+      margin-top: 28px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: 0.1em;
+    }
+    .scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .scroll-label {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      color: rgba(248,194,231,0.4);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, rgba(248,194,231,0.45), transparent);
+    }
+
+    /* ── STATS ── */
+    .stats-section {
+      padding: 72px 48px 64px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px 24px;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-size: clamp(34px, 5vw, 54px);
+      color: #F8C2E7;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    /* ── AUDIO ── */
+    .audio-section {
+      padding: 0 48px 80px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .audio-card {
+      background: rgba(248,194,231,0.07);
+      border: 1px solid rgba(248,194,231,0.18);
+      border-radius: 12px;
+      padding: 24px 28px;
+    }
+    .audio-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: #F8C2E7;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    audio {
+      width: 100%;
+      height: 44px;
+      outline: none;
+      filter: invert(1) hue-rotate(200deg) brightness(0.75) sepia(0.4);
+    }
+
+    /* ── QUOTE / DREAMING ── */
+    .quote-section {
+      position: relative;
+      overflow: hidden;
+      padding: 120px 32px;
+    }
+    .quote-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.22;
+    }
+    .quote-fade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, #0d0821 0%, transparent 30%, transparent 70%, #0d0821 100%);
+    }
+    .quote-inner {
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .attr {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      color: #F8C2E7;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      opacity: 0.7;
+    }
+    blockquote.main {
+      font-size: clamp(22px, 3.5vw, 34px);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.5;
+      margin: 0 0 72px;
+      color: rgba(255,255,255,0.88);
+    }
+    .divider-line {
+      width: 48px;
+      height: 1px;
+      background: rgba(248,194,231,0.4);
+      margin: 0 auto 60px;
+    }
+    .dream-heading {
+      font-size: clamp(36px, 6vw, 80px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin: 0 0 32px;
+      line-height: 1.1;
+      color: #F8C2E7;
+    }
+    .dream-body {
+      font-size: clamp(15px, 1.8vw, 18px);
+      line-height: 1.85;
+      color: rgba(255,255,255,0.62);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── COMPOSITION ── */
+    .composition-section {
+      padding: 100px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .two-col {
+      display: flex;
+      gap: 72px;
+      align-items: flex-start;
+    }
+    .col-text { flex: 1 1 0; min-width: 0; }
+    .col-img { flex: 0 0 400px; max-width: 100%; }
+    .section-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: #F8C2E7;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .section-heading {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 400;
+      margin: 0 0 28px;
+      line-height: 1.2;
+    }
+    .section-heading em { font-style: italic; }
+    .body-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      font-size: clamp(14px, 1.6vw, 17px);
+      line-height: 1.85;
+      color: rgba(255,255,255,0.62);
+    }
+    .body-stack p { margin: 0; }
+    .pink { color: #F8C2E7; }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+    .badge {
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      padding: 6px 14px;
+      border: 1px solid rgba(248,194,231,0.3);
+      border-radius: 20px;
+      color: rgba(248,194,231,0.75);
+    }
+    .photo-wrap {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    }
+    .photo-wrap img { width: 100%; display: block; }
+    .photo-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(13,8,33,0.15) 0%, transparent 60%);
+    }
+    .photo-caption {
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.28);
+      margin-top: 12px;
+      line-height: 1.6;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── DARK NIGHT ── */
+    .dark-section {
+      position: relative;
+      overflow: hidden;
+      padding: 110px 32px;
+    }
+    .dark-section .sec-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.38;
+    }
+    .dark-section .sec-fade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, #0d0821 0%, rgba(13,8,33,0.3) 40%, rgba(13,8,33,0.3) 60%, #0d0821 100%);
+    }
+    .dark-inner {
+      position: relative;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .dark-heading {
+      font-size: clamp(22px, 3.5vw, 40px);
+      font-weight: 400;
+      line-height: 1.5;
+      margin: 0 0 32px;
+    }
+    .dark-body {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-size: clamp(15px, 1.7vw, 17px);
+      line-height: 1.9;
+      color: rgba(255,255,255,0.62);
+    }
+    .dark-body p { margin: 0; }
+    .dark-body em { color: rgba(255,255,255,0.85); }
+
+    /* ── STAGE ── */
+    .stage-section {
+      position: relative;
+      overflow: hidden;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+    }
+    .stage-section .stage-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      opacity: 0.7;
+    }
+    .stage-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(13,8,33,0.92) 40%, rgba(13,8,33,0.3) 100%);
+    }
+    .stage-inner {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px;
+      width: 100%;
+    }
+    .stage-text { max-width: 520px; }
+    .stage-heading {
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 0 0 30px;
+    }
+    .stage-heading em { font-style: italic; }
+    .stage-body {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      font-size: clamp(14px, 1.6vw, 17px);
+      line-height: 1.85;
+      color: rgba(255,255,255,0.62);
+    }
+    .stage-body p { margin: 0; }
+    .venue-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .venue-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: rgba(248,194,231,0.55);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .venue-val {
+      font-size: 15px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ── PERFORMANCE ── */
+    .perf-section {
+      padding: 100px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .perf-photo {
+      flex: 0 0 380px;
+      max-width: 100%;
+    }
+    .perf-photo-wrap {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+    }
+    .perf-photo-wrap img { width: 100%; display: block; }
+    .perf-text { flex: 1 1 0; min-width: 0; }
+    .perf-heading {
+      font-size: clamp(24px, 3.5vw, 44px);
+      font-weight: 400;
+      margin: 0 0 24px;
+      line-height: 1.2;
+    }
+    .perf-heading em { font-style: italic; }
+    .perf-body {
+      font-size: clamp(14px, 1.6vw, 16px);
+      line-height: 1.9;
+      color: rgba(255,255,255,0.58);
+      margin-bottom: 32px;
+    }
+    .yt-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    }
+    .yt-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ── NOTE ── */
+    .note-section {
+      padding: 80px 48px 100px;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .vert-line-top {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, rgba(248,194,231,0.35));
+      margin: 0 auto 48px;
+    }
+    .vert-line-bot {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to top, transparent, rgba(248,194,231,0.35));
+      margin: 48px auto 0;
+    }
+    .note-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: #F8C2E7;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    blockquote.note {
+      font-size: clamp(15px, 2vw, 20px);
+      font-style: italic;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.65);
+      margin: 0;
+    }
+
+    /* ── FUTURE ── */
+    .future-section {
+      position: relative;
+      overflow: hidden;
+      padding: 120px 32px;
+    }
+    .future-section .future-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.35;
+    }
+    .future-section .future-fade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, #0d0821 0%, rgba(13,8,33,0.2) 40%, rgba(13,8,33,0.2) 60%, #0d0821 100%);
+    }
+    .future-inner {
+      position: relative;
+      max-width: 660px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .future-heading {
+      font-size: clamp(30px, 5vw, 60px);
+      font-weight: 400;
+      line-height: 1.2;
+      margin: 0 0 32px;
+    }
+    .future-heading em { font-style: italic; color: #F8C2E7; }
+    .future-body {
+      font-size: clamp(15px, 1.8vw, 18px);
+      line-height: 1.9;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── PAINTING STRIP ── */
+    .strip { display: flex; height: 220px; overflow: hidden; }
+    .strip-cell { flex: 1 1 0; overflow: hidden; }
+    .strip-cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+      filter: saturate(1.1) brightness(0.9);
+    }
+    .strip-cell:hover img { transform: scale(1.06); }
+
+    /* ── CREDITS ── */
+    .credits-section {
+      padding: 80px 48px 120px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .credits-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: #F8C2E7;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+    .credits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 28px 48px;
+    }
+    .credit-role {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: rgba(248,194,231,0.5);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .credit-name { font-size: 15px; color: rgba(255,255,255,0.75); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 760px) {
+      .two-col { flex-direction: column; }
+      .col-img { flex: 0 0 auto; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .perf-section .two-col { flex-direction: column; }
+      .perf-photo { flex: 0 0 auto; }
+      .stage-inner { padding: 60px 24px; }
+      .composition-section, .perf-section { padding: 60px 24px; }
+      .audio-section, .stats-section { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back button -->
+  <a class="back-btn" href="https://katliofficial.com">← KAT</a>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="hero">
+    <img class="hero-bg" src="./dream/b_image4.jpg" alt=""/>
+    <div class="hero-vignette"></div>
+    <div class="hero-content" data-fade>
+      <p class="hero-eyebrow">BNU 4th Art Festival &nbsp;·&nbsp; Theme Song &nbsp;·&nbsp; China's Outstanding Singer-Songwriter of 2024</p>
+      <h1 class="hero-title">Dream<br/><em>in Spotlight</em></h1>
+      <p class="hero-sub">Songwriter&nbsp;/&nbsp;Producer&nbsp;/&nbsp;Audio Engineer&nbsp;/&nbsp;Singer: Katerina Li</p>
+    </div>
+    <div class="scroll-cue">
+      <span class="scroll-label">scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ STATS ═══════════ -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat" data-fade data-d="1">
+        <div class="stat-num">1,164</div>
+        <div class="stat-label">live audience</div>
+      </div>
+      <div class="stat" data-fade data-d="2">
+        <div class="stat-num">165K+</div>
+        <div class="stat-label">streams</div>
+      </div>
+      <div class="stat" data-fade data-d="3">
+        <div class="stat-num">999+</div>
+        <div class="stat-label">comments</div>
+      </div>
+      <div class="stat" data-fade data-d="4">
+        <div class="stat-num">1st</div>
+        <div class="stat-label">prize</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ AUDIO ═══════════ -->
+  <section class="audio-section">
+    <div class="audio-card" data-fade>
+      <p class="audio-label">Click for a listen!</p>
+      <audio controls src="https://dl.dropboxusercontent.com/scl/fi/xy3g1vqf9jfsoao25o3du/dream-in-spotlight.mp3?rlkey=s65czygnprayx3xpkoru428w6&st=0y7ttdl5&dl=0"></audio>
+    </div>
+  </section>
+
+  <!-- ═══════════ QUOTE ═══════════ -->
+  <section class="quote-section">
+    <img class="quote-bg" src="./dream/b_image1.jpg" alt=""/>
+    <div class="quote-fade"></div>
+    <div class="quote-inner">
+      <p class="attr" data-fade>Lady Gaga</p>
+      <blockquote class="main" data-fade data-d="1">"You have to be unique, and different, and shine in your own way."</blockquote>
+      <div class="divider-line" data-fade data-d="2"></div>
+      <h2 class="dream-heading" data-fade data-d="3">WHEN I START<br/>DREAMING</h2>
+      <p class="dream-body" data-fade data-d="4">I would make sure that it will eventually shine under the spotlight. Dream in Spotlight started as a simple melody in high school, a dream that grew into a full song performed live in front of over a thousand people.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ COMPOSITION ═══════════ -->
+  <section class="composition-section">
+    <div class="two-col">
+      <div class="col-text" data-fade data-d="slide">
+        <p class="section-eyebrow">Composition to Production</p>
+        <h3 class="section-heading">A Dream from<br/><em>Senior Year</em></h3>
+        <div class="body-stack">
+          <p>The opening four lines of Dream in Spotlight were first written in my final year of high school, where I spent nights chasing melodies and daydreamed of hearing them on a proper stage. When Beijing Normal University announced it needed a theme song for the art festival, I decided to turn it into something complete.</p>
+          <p>While the song resides within pop, I embedded dubstep growls hidden beneath the drumbeat, a small act of defiance that felt right. During production I mainly used <span class="pink">Kontakt</span> (my favorite plugin so far!), <span class="pink">Ample Guitar</span> (the best way to fake that I play guitar as a pianist), <span class="pink">Sylenth1, Serum, Vital</span>, and others to blend live-instrument textures with synth layers. I wrote all the vocal harmonies myself.</p>
+        </div>
+        <div class="badges">
+          <span class="badge">Kontakt ♡</span>
+          <span class="badge">Ample Guitar</span>
+          <span class="badge">Sylenth1</span>
+          <span class="badge">Serum</span>
+          <span class="badge">Vital</span>
+          <span class="badge">FL Studio</span>
+          <span class="badge">&amp; others</span>
+        </div>
+      </div>
+      <div class="col-img" data-fade data-d="slide-r">
+        <div class="photo-wrap">
+          <img src="./dream/b_image10.jpg" alt="Studio and production sessions"/>
+        </div>
+        <p class="photo-caption">Production sessions — bathroom laptop setup &amp; mixing console at CPAA</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ DARK NIGHT ═══════════ -->
+  <section class="dark-section">
+    <img class="sec-bg" src="./dream/b_image5.jpg" alt=""/>
+    <div class="sec-fade"></div>
+    <div class="dark-inner">
+      <p class="section-eyebrow" data-fade>Lights off, Music on</p>
+      <h3 class="dark-heading" data-fade data-d="1">A Dream Shines in the Dark</h3>
+      <div class="dark-body" data-fade data-d="2">
+        <p>At Beijing Normal University, the power in each dormitory is shut off every night on a strict schedule. I only had a Lenovo that would last about thirty minutes running FL Studio before the battery died. Needing to charge, I would carry my laptop to the shared bathroom, unplug a random unlucky washing machine, and sit on a small stool producing music after midnight. It was neither comfortable nor ideal, but I was genuinely happy every minute of it.</p>
+        <p>Those nights quietly changed the way I create. I learned to trust my instincts and keep moving forward, even when everything felt unfinished. In that darkness, I understood something simple and lasting: <em>a dream doesn't disappear when conditions are imperfect. If anything, it shines more clearly when I refuse to let it go.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ STAGE ═══════════ -->
+  <section class="stage-section">
+    <img class="stage-bg" src="./dream/b_image2.jpg" alt="Performer in spotlight"/>
+    <div class="stage-overlay"></div>
+    <div class="stage-inner">
+      <div class="stage-text">
+        <p class="section-eyebrow" data-fade>Stage Light, Shared Dreams</p>
+        <h2 class="stage-heading" data-fade data-d="1">1,164 people.<br/><em>One stage.</em></h2>
+        <div class="stage-body" data-fade data-d="2">
+          <p>For the closing ceremony, I reshaped Dream in Spotlight for three vocalists. Everyone who had worked on the song had poured their hearts into it, and it deserved a grand stage to match. I rewrote the harmonies so the lyricist could join us and we could all sing together.</p>
+          <p>With those shared efforts, we turned the stage into a shared dream where every voice mattered.</p>
+        </div>
+        <div class="venue-row" data-fade data-d="3">
+          <div>
+            <div class="venue-label">Venue</div>
+            <div class="venue-val">CPAA Grand Theatre</div>
+          </div>
+          <div>
+            <div class="venue-label">Performers</div>
+            <div class="venue-val">Ye · Li · She</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PERFORMANCE + YOUTUBE ═══════════ -->
+  <section class="perf-section">
+    <div class="two-col">
+      <div class="perf-photo" data-fade data-d="slide">
+        <div class="perf-photo-wrap">
+          <img src="./dream/b_image11.jpg" alt="Katerina performing on stage"/>
+        </div>
+      </div>
+      <div class="perf-text" data-fade data-d="slide-r">
+        <p class="section-eyebrow">Live Performance</p>
+        <h3 class="perf-heading">BNU 4th Art Festival<br/><em>Closing Ceremony</em></h3>
+        <p class="perf-body">Dream in Spotlight was selected through a university-wide competition and awarded First Prize. I was awarded the "National Outstanding Singer-Songwriter" by the Ministry of Education of the PRC in 2024. The song has accumulated <span class="pink">165,000+ streams</span> and <span class="pink">999+ comments</span> on NetEase Music.</p>
+        <div class="yt-wrap">
+          <iframe src="https://www.youtube.com/embed/YIEg-T6MZk8"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ NOTE ═══════════ -->
+  <section class="note-section">
+    <div data-fade>
+      <div class="vert-line-top"></div>
+      <p class="note-eyebrow">A note</p>
+      <blockquote class="note">"Mr. Mike Chafee dedicated his life to advancing active monitoring technology so that more people could hear accurate sound. I hope to carry on his legacy. As a Chinese girl who once made music in a bathroom, I want my voice to be heard in a male-dominated industry, and help more female creators build better monitoring environments, so their voices are no longer obscured by technical barriers."</blockquote>
+      <div class="vert-line-bot"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FUTURE ═══════════ -->
+  <section class="future-section">
+    <img class="future-bg" src="./dream/b_image3.jpg" alt=""/>
+    <div class="future-fade"></div>
+    <div class="future-inner">
+      <h2 class="future-heading" data-fade>Dreaming for<br/><em>the Future</em></h2>
+      <p class="future-body" data-fade data-d="1">This project is how I see music technology: not as a collection of isolated technical pieces, but as a complete ability that runs through the entire process, where composing, producing, arranging, and performing all feed each other.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ PAINTING STRIP ═══════════ -->
+  <div class="strip">
+    <div class="strip-cell" data-fade data-d="1"><img src="./dream/b_image6.jpg" alt=""/></div>
+    <div class="strip-cell" data-fade data-d="2"><img src="./dream/b_image7.jpg" alt=""/></div>
+    <div class="strip-cell" data-fade data-d="3"><img src="./dream/b_image8.jpg" alt=""/></div>
+    <div class="strip-cell" data-fade data-d="4"><img src="./dream/b_image9.jpg" alt=""/></div>
+  </div>
+
+  <!-- ═══════════ CREDITS ═══════════ -->
+  <section class="credits-section">
+    <div data-fade>
+      <p class="credits-eyebrow">Credits</p>
+      <div class="credits-grid">
+        <div><div class="credit-role">Composition &amp; Production</div><div class="credit-name">Katerina Li</div></div>
+        <div><div class="credit-role">Lyric</div><div class="credit-name">Andrew She</div></div>
+        <div><div class="credit-role">Audio Engineering</div><div class="credit-name">Katerina Li</div></div>
+        <div><div class="credit-role">Recording</div><div class="credit-name">Yunkai Huang</div></div>
+        <div><div class="credit-role">Vocals</div><div class="credit-name">Yuxuan Ye · Katerina Li</div></div>
+        <div><div class="credit-role">Live Arrangement</div><div class="credit-name">Katerina Li</div></div>
+        <div><div class="credit-role">Published</div><div class="credit-name">2023</div></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('vis');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('[data-fade]').forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>
